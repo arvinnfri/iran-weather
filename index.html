@@ -387,14 +387,14 @@ svg.iranmap{width:100%; height:100%; max-height:100%; overflow:hidden;}
 .province-fill-sel{fill:var(--accent); opacity:0; transition:opacity .4s ease; pointer-events:none;}
 .province-fill-sel.on{opacity:.16;}
 
-.plabel{fill:#eaf6ff; font-size:9px; font-weight:600; text-anchor:middle; paint-order:stroke; stroke:#01050b; stroke-width:3px; stroke-linejoin:round; opacity:.78; cursor:pointer; transition:.2s; letter-spacing:.2px; direction:rtl; unicode-bidi:embed;}
+.plabel{fill:#eaf6ff; font-size:9px; font-weight:600; text-anchor:middle; paint-order:stroke; stroke:#01050b; stroke-width:3px; stroke-linejoin:round; opacity:.78; cursor:pointer; transition:.2s; letter-spacing:.2px; unicode-bidi:plaintext;}
 .plabel:hover{opacity:1; fill:var(--accent);}
 .plabel.selected{fill:var(--accent); font-size:12.5px; font-weight:800; opacity:1; stroke-width:3.5px;}
 .plabel.kish{font-size:8.5px;}
 
 .sea-label{fill:#5aa9c0; font-size:14px; font-weight:600; font-style:italic; text-anchor:middle;
   paint-order:stroke; stroke:#01050b; stroke-width:3px; stroke-linejoin:round; opacity:.65;
-  letter-spacing:2px; cursor:default; pointer-events:none; direction:rtl; unicode-bidi:embed;}
+  letter-spacing:2px; cursor:default; pointer-events:none; unicode-bidi:plaintext;}
 
 .hero-pin{pointer-events:none;}
 .hero-pin .glow{fill:url(#pinGlow);}
@@ -887,7 +887,7 @@ async function fetchWeatherForProvince(id,lat,lng){
     const curPrecip=h.precipitation_probability[nowH]||0;
     const realAqi=Math.round((aq.hourly.us_aqi[nowH]||30)*0.83);
     const hourlyPts=[0,3,6,9,12,15,18,21].map(i=>Math.round(h.temperature_2m[i]||curTemp));
-    const days=dy.time.map((t,i)=>({d:t,hi:Math.round(dy.temperature_2m_max[i]),lo:Math.round(dy.temperature_2m_min[i]),c:WMO_COND[dy.weather_code[i]]||'partly'}));
+    const days=dy.time.map((t,i)=>({d:t.replace(/^\d{4}-/,''),hi:Math.round(dy.temperature_2m_max[i]),lo:Math.round(dy.temperature_2m_min[i]),c:WMO_COND[dy.weather_code[i]]||'partly'}));
     return {temp:curTemp,feels:curTemp-(curWind>15?3:1),humidity:curHum,pressure:curPress,wind:curWind,uv:Math.round(dy.uv_index_max[0]||3),aqi:realAqi,sunrise:dy.sunrise?dy.sunrise[0].slice(11,16):'06:00',sunset:dy.sunset?dy.sunset[0].slice(11,16):'17:00',precip:curPrecip,cond:WMO_COND[curCode]||'partly',alert:null,hourly:hourlyPts,daily:days,_loaded:true};
   }catch(e){return null;}
 }
